@@ -1,0 +1,20 @@
+{
+  "name": "worker2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "worker": "tsc -b && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "redis": "^5.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1"
+  }
+}

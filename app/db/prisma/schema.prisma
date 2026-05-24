@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int       @id @default(autoincrement()) 
+  username      String
+  email         String       @unique
+  password      String
+  problemsCount Int          @default(0)
+  submissions   submission[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model submission {
+  id         Int   @id @default(autoincrement())
+  verdict    verdict
+  userId     Int
+  sourceCode String   @db.Text
+  language   Lang
+  user       User     @relation(fields: [userId], references: [id])
+  problemId  Int
+  problem    Problems @relation(fields: [problemId], references: [pid])
+}
+
+model Problems {
+  pid         Int       @id @default(autoincrement())
+  title       String
+  description String
+  input       String
+  output      String
+  difficulty  Difficulty
+  testcases   Testcase[]
+  submissions submission[]
+}
+
+model Testcase {
+  id Int @id @default(autoincrement())
+
+  input          String @db.Text
+  expectedOutput String @db.Text
+
+  isHidden Boolean @default(true)
+
+  problemId Int
+  problem   Problems @relation(fields: [problemId], references: [pid])
+
+  createdAt DateTime @default(now())
+
+}
+
+enum Lang {
+  C
+  CPP
+  JAVA
+}
+
+enum verdict {
+  AC
+  WA
+  TLE
+  PENDING
+}
+
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
