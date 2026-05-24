@@ -1,4 +1,4 @@
-# JudgeStack 🚀
+# RuntimeX 🚀
 
 A scalable and secure online coding platform built with distributed workers, Docker sandboxing, Redis queues, and PostgreSQL.
 
@@ -153,10 +153,6 @@ PORT=3000
 * Firecracker microVM isolation
 * Leaderboards and rankings
 * Rate limiting and abuse protection
-
-# ⭐ Support
-
-If you found this project useful, consider giving it a star on GitHub.
 
 ---
 
