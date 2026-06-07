@@ -1,12 +1,12 @@
 #!/bin/bash
 
-cd /app
+mkdir -p /tmp/build
 
-javac code.java 
+javac -d /tmp/build /app/Main.java 
 
 if [ $? -ne 0 ]; then
     echo "Compilation Error"
     exit 1
 fi
 
-timeout 1s java -Xmx128m code 
+timeout 1s java -Xmx128m -cp /tmp/build Main < /app/input.txt 

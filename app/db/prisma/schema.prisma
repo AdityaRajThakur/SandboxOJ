@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement()) 
+  id            Int          @id @default(autoincrement())
   username      String
   email         String       @unique
   password      String
@@ -23,25 +23,26 @@ model User {
 }
 
 model submission {
-  id         Int   @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   verdict    verdict
   userId     Int
-  sourceCode String   @db.Text
+  sourceCode String  @db.Text
   language   Lang
-  user       User     @relation(fields: [userId], references: [id])
-  problemId  Int
-  problem    Problems @relation(fields: [problemId], references: [pid])
+  user       User    @relation(fields: [userId], references: [id])
+  // problemId  Int
+  output     String  @db.Text @default("")
+  // problem    Problems @relation(fields: [problemId], references: [pid])
 }
 
 model Problems {
-  pid         Int       @id @default(autoincrement())
+  pid         Int        @id @default(autoincrement())
   title       String
   description String
   input       String
   output      String
   difficulty  Difficulty
   testcases   Testcase[]
-  submissions submission[]
+  // submissions submission[]
 }
 
 model Testcase {
@@ -56,7 +57,6 @@ model Testcase {
   problem   Problems @relation(fields: [problemId], references: [pid])
 
   createdAt DateTime @default(now())
-
 }
 
 enum Lang {

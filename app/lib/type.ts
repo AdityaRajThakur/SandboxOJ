@@ -1,8 +1,20 @@
 export interface Task{
-    pid : number ,
     code :string ,
     uid : number, 
     username : string , 
     email : string , 
     password : string,
+    input : string
+}
+
+export interface Details{
+    username : string ,
+    password :string , 
+    email :string 
+}
+
+export interface TokenPayLoad{
+    userId : number , 
+    username : string ,
+    email :string 
 }
