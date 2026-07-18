@@ -5,12 +5,14 @@ import { exec } from 'child_process';
 const client = createClient({
     url: 'redis://localhost:6379'
 });
+const redisPublisher = createClient({ url: "redis://localhost:6379" });
 const tempDir = "../temp/submission";
-async function saveFile(dir, data, uid) {
+async function saveFile(dir, data, uid, input) {
     const resolvePath = path.resolve(process.cwd(), dir) + `\\${uid}`;
     try {
         await fs.mkdir(resolvePath, { recursive: true });
-        await fs.writeFile(resolvePath + `\\code.java`, data);
+        await fs.writeFile(resolvePath + `\\Main.java`, data);
+        await fs.writeFile(resolvePath + `\\input.txt`, input);
         //  console.log("File saved successfully at ", resolvePath);
     }
     catch (e) {
@@ -19,18 +21,23 @@ async function saveFile(dir, data, uid) {
     return new Promise((resolve) => resolve(resolvePath));
 }
 async function submission(task) {
-    const res = await saveFile(tempDir, task.code, task.uid);
+    const res = await saveFile(tempDir, task.code, task.uid, task.input);
     if (res) {
-        const command = `docker run --rm --network none --memory="256m" --cpus="0.5" --pids-limit=64 --read-only --cap-drop=ALL --security-opt=no-new-privileges -v ${res}:/app java-runner:latest`;
+        const command = `docker run --rm --network none --memory="256m" --cpus="0.5" --pids-limit=64 --read-only --cap-drop=ALL --tmpfs /tmp  --security-opt=no-new-privileges -v ${res}:/app:ro java-runner:latest`;
         //console.log("Code saved successfully for task:", task);
-        exec(command, (error, stdout, stderr) => {
+        exec(command, async (error, stdout, stderr) => {
             if (error) {
+                // await redisPublisher.publish(`user:sub::${task.uid}` , error.message) ; 
                 console.log("Error while executing code for task " + task + " : " + error);
             }
             if (stderr) {
+                await redisPublisher.publish(`user:sub::${task.uid}`, stderr);
                 console.log("Error while executing code" + stderr);
             }
             if (stdout) {
+                const channel = `user:sub::${task.uid}`;
+                console.log("Publishing result to channel " + channel);
+                await redisPublisher.publish(channel, stdout);
                 console.log("code executed successfully " + stdout);
             }
         });
@@ -39,6 +46,7 @@ async function submission(task) {
 async function worker() {
     try {
         await client.connect();
+        await redisPublisher.connect();
         console.log("Redis Connected successfully");
         while (true) {
             try {

@@ -67,6 +67,7 @@ async function worker() {
         await client.connect();
         await redisPublisher.connect() ;
         console.log("Redis Connected successfully");
+        console.log("Worker started") ; 
         while (true) {
             try {
                 const res= await client.brPop("task_queue", 0)

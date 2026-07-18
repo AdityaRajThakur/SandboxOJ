@@ -6,7 +6,7 @@ import express from "express";
 import {prisma} from "./db/prisma.js" ;
 import { authMiddleware } from "./middleware/index.js" ;
 import jwt from "jsonwebtoken" ;
-
+import cors from "cors" ; 
 
 const app = express();
 const PORT : number = 8000;
@@ -16,7 +16,11 @@ const client = createClient(
 );
 
 app.use(express.json());
- 
+ app.use(cors({
+    origin: 'http://localhost:5173', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE' , 'PATCH'],
+    credentials: true
+}));
 app.post("/signup" , async (req , res)=>{
     const {username , email , password} : Details = req.body ; 
     try{
@@ -37,10 +41,8 @@ app.post("/signup" , async (req , res)=>{
                 password : password 
             }
         }); 
-        const token = jwt.sign({userId : response.id , username : response.username, email : response.email} , JWT_SECRET ) ; 
-        return res.status(201).json({
-            message : "User created",
-            token :"Bearer " + token
+        return res.status(200).json({
+            message :"User account create successfully"
         })
     }catch(e){
         return res.status(500).json({
@@ -50,15 +52,31 @@ app.post("/signup" , async (req , res)=>{
 }); 
 
 
-app.post("/signin" , authMiddleware , async (req , res)=>{
-    const {email , uid , username } : {
+app.post("/login" , async (req , res)=>{
+    const {email , password  } : {
         email : string , 
-        uid : number , 
-        username : string 
+        password : string 
     } = req.body ;
-    return res.status(200).json({
-        message : "Welcome back " + username 
-    }) 
+    const user = await prisma.user.findFirst({
+        where : {
+            email : email 
+        }
+    })
+    if(!user){
+        return res.status(400).json({
+            message : "user not found" 
+        })
+    }
+    if(user.password !==password){
+        return res.status(400).json({
+            message :"Invalid Credentials"
+        })
+    }
+    const token = jwt.sign({userId : user.id , username : user.username, email : user.email} , JWT_SECRET ) ; 
+    return res.status(201).json({
+        message : "User created",
+        token :"Bearer " + token
+    })
 }) ; 
 
 
