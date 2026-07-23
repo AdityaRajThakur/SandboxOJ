@@ -154,8 +154,3 @@ PORT=3000
 * Leaderboards and rankings
 * Rate limiting and abuse protection
 
----
-
-# 👨‍💻 Author
-
-Built with ❤️ by Adityaraj Dangi
