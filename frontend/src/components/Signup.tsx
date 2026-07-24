@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -67,7 +69,9 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div>
+      <Navbar/>
+       <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Create an Account
@@ -175,6 +179,7 @@ const Signup = () => {
           </a>
         </p>
       </div>
+    </div>
     </div>
   );
 };

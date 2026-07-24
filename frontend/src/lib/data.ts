@@ -1,0 +1,1 @@
+export const JAVA_CODE = "import java.util.*; \n public class Main { \n    public static void main(String[] args) { \n        System.out.println(\"Hello World!\"); \n   } \n }"
