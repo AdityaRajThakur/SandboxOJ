@@ -82,7 +82,7 @@ app.post("/login" , async (req , res)=>{
 
 
 app.post("/submit", authMiddleware , async (req, res) => {
-    const task: Task = req.body;
+    const task: { code : string , input : string} = req.body;
     console.log(process.env.DATABASE_URL);
     const { username, email , uid  } = req.body;
     console.log("user email" + email) ; 

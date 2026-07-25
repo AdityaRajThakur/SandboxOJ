@@ -16,7 +16,6 @@ interface Task{
     uid : number, 
     username : string , 
     email : string , 
-    password : string,
     input : string
 }
 

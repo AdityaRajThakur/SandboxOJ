@@ -12,6 +12,7 @@ export function authMiddleware(req : Request , res : Response , next : NextFunct
     try{
         if(token){
             const decoded :TokenPayLoad = jwt.verify(token , process.env.JWT_SECRET as string) as TokenPayLoad ; 
+            console.log(decoded) ;
             if(decoded.userId){
                 req.body.uid = decoded.userId ;
                 req.body.username = decoded.username ; 
