@@ -1,15 +1,19 @@
+import {login , logout} from "../auth/user"; 
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import {useSelector , useDispatch} from "react-redux"
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const dispatch = useDispatch() ;
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate() ; 
+
   // Handle input changes
   const handleChange = (e : any ) => {
     const { name, value } = e.target;
@@ -43,7 +47,12 @@ const Login = () => {
 
       // Handle successful login (e.g., save JWT to localStorage and redirect)
       localStorage.setItem('token', data.token);
-      console.log('Login successful!', data);
+      localStorage.setItem("user" , JSON.stringify(data.user));
+      const payload = {...data.user , isAuthenticated : true}
+      dispatch(login(payload)) ; 
+      // console.log("this is using redux " + email) ; 
+      
+      // console.log('Login successful!', data.user);
       
       // Redirect user or update global auth state here
       // window.location.href = '/dashboard';
@@ -68,7 +77,9 @@ const Login = () => {
             {error}
           </div>
         )}
-
+              {/* <div>
+                {username} - {id } - {email} 
+              </div> */}
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">

@@ -2,15 +2,44 @@ import { HStack, Box, Theme, Button } from "@chakra-ui/react";
 import { Provider } from "@/components/ui/provider";
 import { Center, Splitter } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type * as monaco from "monaco-editor";
 import { Textarea } from "@/components/Textarea";
 import { BACKEND, JAVA_CODE } from "@/lib/lib";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 export default function Dashboard() {
   const [code, setCode] = useState<string>(JAVA_CODE);
   const [input, setInput] = useState<string>("");
-  const [isLoading, setLoading] = useState<boolean>(false) ; 
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const { id, username, email, isAuthenticated } = useSelector(
+    (state: any) => state.user,
+  );
+  const [output, setOutput] = useState<string>("");
+  const socketRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    socketRef.current = new WebSocket("ws://localhost:8080/?uid=" + id);
+    socketRef.current.onopen = () => {
+      console.log("WebSocket connection opened");
+    };
+    socketRef.current.onmessage = (event) => {
+      setOutput(event.data);
+      console.log("this is my websocket data") ; 
+      console.log(event.data) 
+      if (socketRef.current) {
+        socketRef.current.onerror = (error) => {
+          console.error("WebSocket error:", error);
+        };
+      }
+    };
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, []);
+
   function handleEvent(
     value: string | undefined,
     event: monaco.editor.IModelContentChangedEvent,
@@ -26,8 +55,8 @@ export default function Dashboard() {
     console.log(e.target.value);
   }
   async function submitCode() {
-    console.log("onclick cliked") ; 
-    setLoading(true) ;
+    console.log("onclick cliked");
+    setLoading(true);
     const res = await axios.post(
       BACKEND,
       {
@@ -40,11 +69,12 @@ export default function Dashboard() {
         },
       },
     );
-    if(res.status ===200){
-      setLoading(false) ; 
+    if (res.status === 200) {
+      setLoading(false);
     }
-    console.log(res) ; 
+    console.log(res);
   }
+
   return (
     <Provider>
       <Button
@@ -58,6 +88,7 @@ export default function Dashboard() {
         {" "}
         Compile{" "}
       </Button>
+
       <Box width="dvw" height="dvh">
         <Splitter.Root
           panels={[{ id: "a" }, { id: "b" }]}
@@ -97,7 +128,7 @@ export default function Dashboard() {
                 <Splitter.Panel id="d">
                   <div className="bg-white w-full h-screen text-black">
                     <Textarea
-                      children={"output here"}
+                      children={output}
                       readonly={true}
                       onChange={() => {}}
                     />
