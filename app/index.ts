@@ -60,6 +60,12 @@ app.post("/login" , async (req , res)=>{
     const user = await prisma.user.findFirst({
         where : {
             email : email 
+        }, 
+        select : {
+            id : true , 
+            username : true , 
+            email : true ,
+            password : true 
         }
     })
     if(!user){
@@ -75,7 +81,12 @@ app.post("/login" , async (req , res)=>{
     const token = jwt.sign({userId : user.id , username : user.username, email : user.email} , JWT_SECRET ) ; 
     return res.status(201).json({
         message : "User created",
-        token :"Bearer " + token
+        token :"Bearer " + token,
+        user : {
+            id : user.id , 
+            username: user.username,
+            email : user.email
+        }
     })
 }) ; 
 
