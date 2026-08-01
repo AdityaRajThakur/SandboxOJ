@@ -6,68 +6,8 @@ JudgeStack is designed to execute untrusted user code securely inside isolated D
 
 ---
 
-# ✨ Features
-
-* 🔒 Secure code execution using Docker sandboxing
-* ⚡ Distributed worker architecture using Redis queues
-* 🧠 Multi-language execution support
-* 📦 Containerized infrastructure
-* 🗂 PostgreSQL + Prisma ORM integration
-* ⏱ Execution timeout and memory limits
-* 🚫 Network-isolated execution environment
-* 🔄 Asynchronous submission processing
-* 📊 Submission verdict tracking
-* 🧵 Worker-based scalable execution engine
-* 🛡 Resource constrained runtime environment
-
----
-
-# 🏗 Architecture
-
-```text
-                ┌──────────────┐
-                │   Frontend   │
-                └──────┬───────┘
-                       │
-                       ▼
-                ┌──────────────┐
-                │   API Server │
-                └──────┬───────┘
-                       │
-          Store Submission in DB
-                       │
-                       ▼
-                ┌──────────────┐
-                │ PostgreSQL   │
-                └──────┬───────┘
-                       │
-             Push submissionId
-                       │
-                       ▼
-                ┌──────────────┐
-                │ Redis Queue  │
-                └──────┬───────┘
-                       │
-                 Worker Pulls Job
-                       │
-                       ▼
-                ┌──────────────┐
-                │ Worker       │
-                └──────┬───────┘
-                       │
-             Spawn Sandbox Container
-                       │
-                       ▼
-                ┌──────────────┐
-                │ Docker Judge │
-                └──────────────┘
-```
-
----
 
 # 🔐 Sandbox Security
-
-
 
 ### Security Features
 
@@ -96,7 +36,6 @@ JudgeStack is designed to execute untrusted user code securely inside isolated D
 ## Infrastructure
 
 * Docker
-* Docker Compose
 
 ## Execution Engine
 
@@ -120,37 +59,14 @@ PORT=3000
 
 # 📜 Supported Languages
 
-* C
-* C++
 * Java
-
----
-
-# 📊 Verdicts
-
-| Verdict      | Meaning               |
-| ------------ | --------------------- |
-| AC           | Accepted              |
-| WA           | Wrong Answer          |
-| TLE          | Time Limit Exceeded   |
-| MLE          | Memory Limit Exceeded |
-| RE           | Runtime Error         |
-| CE           | Compilation Error     |
-| SYSTEM_ERROR | Internal Judge Error  |
-
----
-
-
+  
 # 🔥 Future Improvements
 
 * WebSocket live verdict updates
 * Contest support
 * Code editor integration
 * Custom testcases
-* Plagiarism detection
-* Kubernetes autoscaling
 * Multi-language workers
-* Firecracker microVM isolation
-* Leaderboards and rankings
 * Rate limiting and abuse protection
 
