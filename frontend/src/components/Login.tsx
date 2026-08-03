@@ -1,8 +1,8 @@
-import {login , logout} from "../auth/user"; 
-import React, { useState } from 'react';
+import {login } from "../auth/user"; 
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-import {useSelector , useDispatch} from "react-redux"
+import { useDispatch} from "react-redux"
 
 const Login = () => {
   const [formData, setFormData] = useState({

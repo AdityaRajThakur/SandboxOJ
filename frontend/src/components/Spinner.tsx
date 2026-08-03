@@ -1,4 +1,4 @@
-import { Spinner, Text, VStack ,Center } from "@chakra-ui/react"
+import { Spinner ,Center } from "@chakra-ui/react"
 
 export const Loader = ()=>{
 return (<div className = "bg-dark w-full h-120 flex justify-center">

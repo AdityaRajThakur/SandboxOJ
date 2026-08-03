@@ -1,19 +1,19 @@
-import { HStack, Box, Theme, Button } from "@chakra-ui/react";
+import {  Box, Button } from "@chakra-ui/react";
 import { Provider } from "@/components/ui/provider";
 import { Center, Splitter } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
 import { useState, useEffect, useRef } from "react";
-import type * as monaco from "monaco-editor";
+// import type * as monaco from "monaco-editor";
 import { Textarea } from "@/components/Textarea";
 import { BACKEND, JAVA_CODE } from "@/lib/lib";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import {Loader} from "@/components/Spinner" ; 
 import axios from "axios";
 export default function Dashboard() {
   const [code, setCode] = useState<string>(JAVA_CODE);
   const [input, setInput] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
-  const { id, username, email, isAuthenticated } = useSelector(
+  const { id } = useSelector(
     (state: any) => state.user,
   );
   const [output, setOutput] = useState<string>("");
@@ -45,7 +45,7 @@ export default function Dashboard() {
 
   function handleEvent(
     value: string | undefined,
-    event: monaco.editor.IModelContentChangedEvent,
+    //event: monaco.editor.IModelContentChangedEvent,
   ) {
     if (value) {
       console.log(value);
