@@ -7,6 +7,7 @@ import type * as monaco from "monaco-editor";
 import { Textarea } from "@/components/Textarea";
 import { BACKEND, JAVA_CODE } from "@/lib/lib";
 import { useSelector, useDispatch } from "react-redux";
+import {Loader} from "@/components/Spinner" ; 
 import axios from "axios";
 export default function Dashboard() {
   const [code, setCode] = useState<string>(JAVA_CODE);
@@ -17,13 +18,14 @@ export default function Dashboard() {
   );
   const [output, setOutput] = useState<string>("");
   const socketRef = useRef<WebSocket | null>(null);
-
+  const [loadingTextArea , setLoadingTextArea] = useState<boolean>(false)
   useEffect(() => {
     socketRef.current = new WebSocket("ws://localhost:8080/?uid=" + id);
     socketRef.current.onopen = () => {
       console.log("WebSocket connection opened");
     };
     socketRef.current.onmessage = (event) => {
+      setLoadingTextArea(false)
       setOutput(event.data);
       console.log("this is my websocket data") ; 
       console.log(event.data) 
@@ -35,6 +37,7 @@ export default function Dashboard() {
     };
     return () => {
       if (socketRef.current) {
+        console.log("closing websocket") ; 
         socketRef.current.close();
       }
     };
@@ -57,6 +60,7 @@ export default function Dashboard() {
   async function submitCode() {
     console.log("onclick cliked");
     setLoading(true);
+    setLoadingTextArea(true); 
     const res = await axios.post(
       BACKEND,
       {
@@ -108,7 +112,7 @@ export default function Dashboard() {
           </Splitter.Panel>
           <Splitter.ResizeTrigger id="a:b" />
           <Splitter.Panel id="b">
-            <Center boxSize="full" textStyle="2xl">
+            <Center boxSize="full" textStyle="">
               <Splitter.Root
                 panels={[{ id: "c" }, { id: "d" }]}
                 orientation="vertical"
@@ -127,11 +131,11 @@ export default function Dashboard() {
                 <Splitter.ResizeTrigger id="c:d" />
                 <Splitter.Panel id="d">
                   <div className="bg-white w-full h-screen text-black">
-                    <Textarea
+                    {loadingTextArea ? <Loader/>:<Textarea
                       children={output}
                       readonly={true}
                       onChange={() => {}}
-                    />
+                    />} 
                   </div>
                 </Splitter.Panel>
               </Splitter.Root>

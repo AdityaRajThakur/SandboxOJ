@@ -4,6 +4,7 @@ export function Textarea({ children , readonly , onChange}: { children: string ,
       <div className=" text-white">
         <textarea readOnly= {readonly}
           rows={100}
+           cols ={100}
           onChange ={onChange}
           placeholder={children}
           className="flex-1 bg-dark border-none outline-none  focus:ring-0 p-2 resize-none"

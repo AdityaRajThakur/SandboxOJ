@@ -10,15 +10,15 @@ const activeConnections = new Map<string, WebSocket>();
 
 const redisSubscriber = createClient({ url: process.env.REDIS_URL || "" });
 
-wss.on("connection", async (ws: WebSocket, req: any) => {
+wss.on("connection", async (ws: WebSocket, req: any) => { 
     // connection ws://localhost:8080/?uid=1
     ws.send("connection established");
-    const uid: number = Number(req.url.split("/?uid=")[1]);
+    const uid: number = Number(req.url.split("/?uid=")[1]); 
     if (!uid) {
         ws.send("Invalid connection, UID is required");
     }
     activeConnections.set(uid.toString(), ws);
-    console.log("New client connected with uid  " + uid);
+    console.log("New client connected with uid  " + uid); 
     if (uid) {
         const channel = `user:sub::${uid}`;
         console.log("Subscribing to channel " + channel);
@@ -40,7 +40,7 @@ wss.on("connection", async (ws: WebSocket, req: any) => {
             } catch (e) {
                 console.log("Error while unsubscribing from channel");
             }
-            console.log("Client with uid " + uid + " disconnected");
+            console.log("Client with uid " + uid + " disconnected"); 
         })
     }
     ws.on("message", (message: string) => {

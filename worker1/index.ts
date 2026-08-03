@@ -38,19 +38,21 @@ async function submission(task : Task){
     const res:string = await saveFile(tempDir , task.code , task.uid , task.input) ; 
     if(res){
         
-        const command = `docker run --rm --network none --memory="256m" --cpus="0.5" --pids-limit=64 --read-only --cap-drop=ALL --tmpfs /tmp  --security-opt=no-new-privileges -v ${res}:/app:ro java-runner:latest`
+        const command : string = `docker run --rm --network none --memory="256m" --cpus="0.5" --pids-limit=64 --read-only --cap-drop=ALL --tmpfs /tmp  --security-opt=no-new-privileges -v ${res}:/app:ro java-runner:latest`
 
         //console.log("Code saved successfully for task:", task);
         exec(command , async (error , stdout , stderr)=>{
             if(error) {
                 // await redisPublisher.publish(`user:sub::${task.uid}` , error.message) ; 
-                console.log("Error while executing code for task " + task + " : " + error) ;
-            }
-            if(stderr){
+                await redisPublisher.publish(`user:sub::${task.uid}` ,error.message.split("java-runner:latest")[1] || ""); 
+                console.log("Error while executing code for task " + task.uid + " : " + error.message.split("java-runner:latest")[1]) ;
+                console.log("startfrom here") ; 
+                // console.log(error.message) 
+            
+            }else if(stderr){
                 await redisPublisher.publish(`user:sub::${task.uid}` ,stderr) ; 
                 console.log("Error while executing code" + stderr) ; 
-            }
-            if(stdout){
+            }else if(stdout){
                 const channel = `user:sub::${task.uid}`;
                 console.log("Publishing result to channel " + channel); 
                 await redisPublisher.publish(channel , stdout) ; 
