@@ -5,7 +5,7 @@ import Editor from "@monaco-editor/react";
 import { useState, useEffect, useRef } from "react";
 // import type * as monaco from "monaco-editor";
 import { Textarea } from "@/components/Textarea";
-import { BACKEND, JAVA_CODE } from "@/lib/lib";
+import { BACKEND, JAVA_CODE , WEBSOCKET_URL } from "@/lib/lib";
 import { useSelector} from "react-redux";
 import {Loader} from "@/components/Spinner" ; 
 import axios from "axios";
@@ -20,7 +20,7 @@ export default function Dashboard() {
   const socketRef = useRef<WebSocket | null>(null);
   const [loadingTextArea , setLoadingTextArea] = useState<boolean>(false)
   useEffect(() => {
-    socketRef.current = new WebSocket("ws://localhost:8080/?uid=" + id);
+    socketRef.current = new WebSocket(WEBSOCKET_URL + id);
     socketRef.current.onopen = () => {
       console.log("WebSocket connection opened");
     };
@@ -79,19 +79,26 @@ export default function Dashboard() {
     console.log(res);
   }
 
-  return (
-    <Provider>
-      <Button
-        loading={isLoading}
-        onClick={submitCode}
-        size="xs"
-        marginTop="5px"
-        marginBottom="10px"
-        marginLeft="10px"
-      >
-        {" "}
-        Compile{" "}
-      </Button>
+  return <div>
+    <div>
+      {/* Hello */}
+    </div>
+    <div>
+      <Provider>
+        <Box  bg= "#1e1e1e">
+          <Center>
+                      <Button
+            loading={isLoading}
+            onClick={submitCode}
+            size="xs"
+            marginTop="5px"
+            marginBottom="10px"
+            marginLeft="10px">
+            {" "}Compile{" "}
+          </Button>
+          </Center>
+
+        </Box>
 
       <Box width="dvw" height="dvh">
         <Splitter.Root
@@ -143,6 +150,8 @@ export default function Dashboard() {
           </Splitter.Panel>
         </Splitter.Root>
       </Box>
+
     </Provider>
-  );
+    </div>
+  </div>
 }

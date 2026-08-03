@@ -55,8 +55,8 @@ const Login = () => {
       // console.log('Login successful!', data.user);
       
       // Redirect user or update global auth state here
-      // window.location.href = '/dashboard';
-      navigate('/dashboard') ; 
+      // window.location.href = '/';
+      navigate('/') ; 
 
     } catch (err : any ) {
       setError(err.message);

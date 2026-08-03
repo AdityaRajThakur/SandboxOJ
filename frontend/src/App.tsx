@@ -2,7 +2,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-
+import ProtectedRoute from "./auth/protectedRoute";
+import Home from "./components/Home" ; 
 function App() {
   return (
     <Router>
@@ -13,11 +14,12 @@ function App() {
         <Route path="/signup" element={<Signup />}>
           {" "}
         </Route>
-      </Routes>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />}>
-          {" "}
+        <Route element={<ProtectedRoute />}> 
+          <Route path="/" element={<Dashboard />}>
+            {" "}
+          </Route>
         </Route>
+        <Route path="/dashboard" element={<Home />}/>
       </Routes>
     </Router>
   );
