@@ -1,14 +1,14 @@
+import "dotenv/config";
 import { createClient } from "redis";
 import { WebSocketServer, WebSocket } from "ws";
 
-const PORT = 8080;
 
 
-const wss = new WebSocketServer({ port: PORT });
+const wss = new WebSocketServer({ port: Number(process.env.WS_PORT)  || 8080 });
 
 const activeConnections = new Map<string, WebSocket>();
 
-const redisSubscriber = createClient({ url: "redis://localhost:6379" });
+const redisSubscriber = createClient({ url: process.env.REDIS_URL || "" });
 
 wss.on("connection", async (ws: WebSocket, req: any) => {
     // connection ws://localhost:8080/?uid=1
@@ -52,7 +52,7 @@ async function startWebSocketServer() {
     try {
         await redisSubscriber.connect();
         wss.on("listening", () => {
-            console.log("WebSocket Server is listening on port " + PORT);
+            console.log("WebSocket Server is listening on port " + process.env.WS_PORT);
         });
     } catch (e) {
         console.log("Error while connecting to Redis: " + e);
