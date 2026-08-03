@@ -1,14 +1,14 @@
+import "dotenv/config";
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createClient } from "redis";
 import { exec } from 'child_process';
 
-
 const client = createClient({
-    url: 'redis://localhost:6379'
+    url: process.env.REDIS_URL || ""
 });
 
-const redisPublisher = createClient({ url: "redis://localhost:6379" });
+const redisPublisher = createClient({ url: process.env.REDIS_URL || ""});
 
 
 interface Task {

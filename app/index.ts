@@ -1,14 +1,13 @@
-
+import "dotenv/config";
 import { createClient } from 'redis';
 import express from "express";
 import cors from "cors" ; 
 import userRouter from "./routes/userRoutes.js" ; 
 const app = express();
-const PORT : number = 8000;
 // const client = createClient(
 //     { url: 'redis://localhost:6379' }
 // );
-
+const PORT :number = Number(process.env.SERVER_PORT) ; 
 app.use(express.json());
 app.use(cors({
     origin: process.env.FRONTEND_URL || "", 
