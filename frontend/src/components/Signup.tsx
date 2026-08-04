@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import axios from "axios" ; 
+import  AxiosError from "axios" ; 
+import {login } from "../auth/user"; 
+
+import {useDispatch} from "react-redux" ; 
+import toast from "react-hot-toast"; 
+import { useGoogleLogin } from '@react-oauth/google';
+import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +20,38 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch() ; 
+  const responseGoogle = async (authResult: any)=>{
+    setIsLoading(true) ; 
+    try{
+      const res = await axios.post("http://localhost:8000/google" , {
+        code :authResult.code 
+      });  
+      console.log(res.data) ; 
+      localStorage.setItem("token" , res.data.token) ; 
+      toast.success(res.data.message) ; 
+      localStorage.setItem("user" , JSON.stringify(res.data.user));
+      const payload :{
+        id : number , 
+        username : string , 
+        email : string , 
+        isAuthenticated : boolean
+      } = {...res.data.user ,isAuthenticated : true  }
+      dispatch(login(payload)) ; 
+      setIsLoading(false) ; 
+      navigate('/') ; 
+    }catch(err : any ){
+      console.log(err) ; 
+      toast.error("something went wrong,signup"); 
+      setIsLoading(false) ;
+    }
+  }
+
+  const googleLogin = useGoogleLogin({
+    onSuccess : responseGoogle,
+    onError :responseGoogle ,
+    flow : "auth-code"
+  })
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,7 +112,7 @@ const Signup = () => {
     <div>
       <Navbar/>
        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+      <div className="w-full max-w-md p-8  space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Create an Account
         </h2>
@@ -83,7 +123,7 @@ const Signup = () => {
           </div>
         )}
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-2" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="name"
@@ -163,18 +203,21 @@ const Signup = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full px-4 py-2 font-medium text-white bg-dark rounded-md hover:bg-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {isLoading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
-
+        <div className = "h-1 text-sm font-thin flex justify-center "><div>or</div></div>
+        <div className = "flex justify-center mt-10">
+          <button onClick={googleLogin}className = "p-2 w-full flex justify-center cursor-pointer bg-gray-100 hover:bg-gray-200 shadow-md rounded-sm p-1">
+            <div className ="pr-2 pt-1"><FcGoogle /></div>
+            <div>{isLoading?"Signing in with Google...":"Continue With Google"}</div>
+          </button>
+        </div>
         <p className="text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="font-medium text-blue-600 hover:underline"
-          >
+          <a href="/login" className="font-medium text-blue-600 hover:underline" >
             Sign in
           </a>
         </p>

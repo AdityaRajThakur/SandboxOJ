@@ -4,6 +4,8 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./auth/protectedRoute";
 import Home from "./components/Home" ; 
+import {Toaster} from "react-hot-toast" ; 
+
 function App() {
   return (
     <Router>
@@ -15,12 +17,13 @@ function App() {
           {" "}
         </Route>
         <Route element={<ProtectedRoute />}> 
-          <Route path="/" element={<Dashboard />}>
+          <Route path="/ide" element={<Dashboard />}>
             {" "}
           </Route>
+          <Route path="/" element={<Home />}/>
         </Route>
-        <Route path="/dashboard" element={<Home />}/>
       </Routes>
+      <Toaster/>
     </Router>
   );
 }

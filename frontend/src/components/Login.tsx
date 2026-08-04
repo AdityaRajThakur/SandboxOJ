@@ -56,7 +56,7 @@ const Login = () => {
       
       // Redirect user or update global auth state here
       // window.location.href = '/';
-      navigate('/') ; 
+      navigate('/ide') ; 
 
     } catch (err : any ) {
       setError(err.message);
@@ -116,7 +116,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full px-4 py-2 font-medium text-white bg-dark rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>

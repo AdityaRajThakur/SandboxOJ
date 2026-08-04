@@ -6,7 +6,7 @@ import { authMiddleware } from "../middleware/index.js" ;
 import jwt from "jsonwebtoken" ;
 import type { Task , Details } from '../lib/type.js';
 import Redis from "../lib/redis.js" ;
-import {oauth2Client} from "../config/googleConfig" ; 
+import {oauth2Client} from "../config/googleConfig.js" ; 
 import axios from "axios" ;
 const userRouter = Router() ; 
 const JWT_SECRET :string  = process.env.JWT_SECRET || "";
@@ -43,35 +43,46 @@ userRouter.post("/signup" , async (req , res)=>{
 }); 
 userRouter.post("/google" , async (req, res)=>{
     const {code}  = req.body ; 
+
     const googleRes = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(googleRes.tokens) ; 
-    const userRes = await axios.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="+googleRes.tokens.access_token); 
-    const {name , email , picture} = userRes.data ; 
-    const user = await prisma.user.findFirst({
+    const userRes:{
+        data :{
+            name : string , 
+            email : string , 
+            picture : any 
+        }
+    } = await axios.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="+googleRes.tokens.access_token); 
+    const {name , email , picture} : {
+        name : string , 
+        email :string , 
+        picture : any 
+    } = userRes.data ; 
+    console.log("google data" + name + email ); 
+    let user = await prisma.user.findFirst({
         where :{
             email : email 
         }
-    })
-    if(user){
-        return res.status(400).json({
-            message : "user already exists" 
-        })
-    }
-    const response = await prisma.user.create({
+    });
+
+    if(!user){
+    user = await prisma.user.create({
         data :{
             username : name , 
             email : email , 
             password :""  // has to look for better way 
         }
-    }); 
-    const token = jwt.sign({userId : response.id , username : response.username, email : response.email} , JWT_SECRET ) ; 
+    });
+    }
+ 
+    const token = jwt.sign({userId : user.id , username : user.username, email : user.email} , JWT_SECRET ) ; 
     return res.status(201).json({
         message : "User created",
         token :"Bearer " + token,
         user : {
-            id : response.id , 
-            username: response.username,
-            email : response.email
+            id : user.id , 
+            username: user.username,
+            email : user.email
         }
     }); 
 })
