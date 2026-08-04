@@ -86,7 +86,6 @@ userRouter.post("/google" , async (req, res)=>{
         }
     }); 
 })
-
 userRouter.post("/login" , async (req , res)=>{
     const {email , password  } : {
         email : string , 
@@ -124,9 +123,6 @@ userRouter.post("/login" , async (req , res)=>{
         }
     })
 }) ; 
-
-
-
 userRouter.post("/submit", authMiddleware , async (req, res) => {
     const client = await Redis.getConnection() ; 
     const task: { code : string , input : string} = req.body;
@@ -154,7 +150,6 @@ userRouter.post("/submit", authMiddleware , async (req, res) => {
         message: "Code submitted successfully"
     })
 });
-
 userRouter.get("/submissions", authMiddleware , async (req , res)=>{
     const {username  , email , uid } : {
         username :string , 
@@ -177,9 +172,47 @@ userRouter.get("/submissions", authMiddleware , async (req , res)=>{
         })
     }
 }); 
-
-
-
+userRouter.get("/me" , authMiddleware , async(req ,res)=>{
+    const {username , email , id }:{
+        username : string , 
+        email : string , 
+        id : number 
+    } = req.body ; 
+    console.log(username , email , id) ; 
+    return res.status(200).json({
+        user : {
+            id : id , 
+            username : username , 
+            email : email 
+        }
+    })
+})
+userRouter.put("/update" , authMiddleware , async (req , res)=>{
+    const {email ,  password , id  }: {
+        email : string , 
+        password : string ,
+        id : number 
+    } = req.body ; 
+    try{
+        const updatedUser = await prisma.user.update({
+            where :{
+                email : email 
+            },
+            data :{
+                 password 
+            }
+        }); 
+        console.log(updatedUser);
+    }catch(err){
+        console.log(err) ; 
+        return res.status(500).json({
+            message :"Failed to update user data" 
+        });
+    }
+    return res.status(200).json({
+        message :"User data updated successfully"
+    }); 
+}); 
 
 
 export default userRouter ; 
