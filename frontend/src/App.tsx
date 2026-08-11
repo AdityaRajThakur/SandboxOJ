@@ -5,7 +5,7 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./auth/protectedRoute";
 import Home from "./components/Home" ; 
 import {Toaster} from "react-hot-toast" ; 
-
+import UpdateAccount from "./components/account/UpdateAccount" ;
 function App() {
   return (
     <Router>
@@ -20,8 +20,9 @@ function App() {
           <Route path="/ide" element={<Dashboard />}>
             {" "}
           </Route>
-          <Route path="/" element={<Home />}/>
+          <Route path="/account" element={<UpdateAccount />}/>
         </Route>
+        <Route path="/" element={<Home />}/>
       </Routes>
       <Toaster/>
     </Router>

@@ -188,10 +188,10 @@ userRouter.get("/me" , authMiddleware , async(req ,res)=>{
     })
 })
 userRouter.put("/update" , authMiddleware , async (req , res)=>{
-    const {email ,  password , id  }: {
+    const {email ,  password , uid  }: {
         email : string , 
         password : string ,
-        id : number 
+        uid : number 
     } = req.body ; 
     try{
         const updatedUser = await prisma.user.update({
@@ -206,7 +206,7 @@ userRouter.put("/update" , authMiddleware , async (req , res)=>{
     }catch(err){
         console.log(err) ; 
         return res.status(500).json({
-            message :"Failed to update user data" 
+            message :"Failed to update user password" 
         });
     }
     return res.status(200).json({

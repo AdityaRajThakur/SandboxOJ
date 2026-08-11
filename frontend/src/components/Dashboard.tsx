@@ -62,7 +62,7 @@ export default function Dashboard() {
     setLoading(true);
     setLoadingTextArea(true); 
     const res = await axios.post(
-      BACKEND,
+      BACKEND + "/submit",
       {
         code: code,
         input: input,

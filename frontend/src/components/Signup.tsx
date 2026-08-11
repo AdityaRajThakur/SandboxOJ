@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import axios from "axios" ; 
-import  AxiosError from "axios" ; 
 import {login } from "../auth/user"; 
-
+import {BACKEND} from "../lib/lib"
 import {useDispatch} from "react-redux" ; 
 import toast from "react-hot-toast"; 
 import { useGoogleLogin } from '@react-oauth/google';
@@ -69,6 +68,7 @@ const Signup = () => {
     // Client-side validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      toast.error("Password do not match") ; 
       return;
     }
 
@@ -76,7 +76,7 @@ const Signup = () => {
 
     try {
       // Replace with your actual backend registration endpoint
-      const response = await fetch("http://localhost:8000/signup", {
+      const response = await fetch(BACKEND+"/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,15 +92,17 @@ const Signup = () => {
       const data = await response.json();
       console.log(data) ; 
       if (!response.ok) {
+        toast.error("Failed to create account") ; 
         throw new Error(data.message || "Failed to create account");
       }
       // aditya you are storing toking in localstorage, using route login to redirect. 
     //   localStorage.setItem("token", data.token);
       console.log("Registration successful!", data);
-
+      toast.success("Login OK") ; 
       navigate("/login");
     } catch (err: unknown) {
       if (err instanceof Error) {
+        toast.error(err.message) ; 
         setError(err.message);
       }
     } finally {
@@ -203,7 +205,7 @@ const Signup = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-4 py-2 font-medium text-white bg-dark rounded-md hover:bg-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full px-4 mt-2  py-2 font-medium text-white bg-dark rounded-md hover:bg-zinc-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {isLoading ? "Creating account..." : "Sign Up"}
           </button>
