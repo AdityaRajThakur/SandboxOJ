@@ -1,25 +1,13 @@
 import Navbar from "./Navbar";
 import React, { useState } from 'react';
 import { Docker , CodeBracket , WebSocket  }  from "../components/Icons" ; 
-
+import { JAVA_CODE1 } from "@/lib/lib";
 import {useNavigate} from "react-router-dom";
 const Home = () => {
   const [activeTab, setActiveTab] = useState<string>('java');
   const navigate = useNavigate() ; 
   const codeSnippets = {
-    java: `public class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            if (map.containsKey(complement)) {
-                return new int[] { map.get(complement), i };
-            }
-            map.put(nums[i], i);
-        }
-        return new int[] {};
-    }
-}`
+    java: JAVA_CODE1
   };
   return (
     <div className = "">

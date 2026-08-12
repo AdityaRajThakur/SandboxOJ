@@ -1,7 +1,7 @@
 export const Docker = () => {
   return (
     <svg
-      className="w-5 h-5"
+      className="w-5 h-5 animate-pulse"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -16,13 +16,13 @@ export const Docker = () => {
   );
 };
 export const WebSocket = ()=>{
-    return  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    return  <svg className="animate-pulse w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
     </svg>
 }
 
 export const CodeBracket = ()=>{
-    return <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    return <svg className="animate-pulse w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
 }

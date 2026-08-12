@@ -5,7 +5,9 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./auth/protectedRoute";
 import Home from "./components/Home" ; 
 import {Toaster} from "react-hot-toast" ; 
+
 import UpdateAccount from "./components/account/UpdateAccount" ;
+import Navbar from "./components/Navbar";
 function App() {
   return (
     <Router>

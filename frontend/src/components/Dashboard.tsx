@@ -4,6 +4,7 @@ import { Center, Splitter } from "@chakra-ui/react";
 import Editor from "@monaco-editor/react";
 import { useState, useEffect, useRef } from "react";
 // import type * as monaco from "monaco-editor";
+import Navbar from "../components/Navbar" ; 
 import { Textarea } from "@/components/Textarea";
 import { BACKEND, JAVA_CODE , WEBSOCKET_URL } from "@/lib/lib";
 import { useSelector} from "react-redux";
@@ -79,11 +80,8 @@ export default function Dashboard() {
     console.log(res);
   }
 
-  return <div>
-    <div>
-      {/* Hello */}
-    </div>
-    <div>
+  return <div className = "">
+    <div className = "">
       <Provider>
         <Box  bg= "#1e1e1e">
           <Center>
